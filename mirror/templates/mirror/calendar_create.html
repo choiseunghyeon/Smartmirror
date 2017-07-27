@@ -1,0 +1,48 @@
+<div class = "modal fade" id="modal_register" tabindex = "-1" role="dialog" aria-labelledby = "myModalLabel" >
+  <div class = "modal-dialog modal-lg modal-register" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal_register_title">  캘린더 등록</h4>
+      </div>
+      <div class = "modal-body" id="modal_register_body">
+        <form id="create" class="form-horizontal" action="/mirror/create/" method="post">{% csrf_token %}
+        {% if form.errors %}
+        <p>{{form.errors}}</p>
+        {% endif %}
+        <fieldset>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label" for="{{form.title.name}}"><span></span>{{form.title.label}}</label>
+                  <div class="col-md-8">
+                    {{form.title}}
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-md-4 control-label" for="{{form.start.name}}"><span></span>{{form.start.label}}</label>
+                  <div class="col-md-8">
+                    {{form.start}}
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="{{form.end.name}}"><span></span>{{form.end.label}}</label>
+                <div class="col-md-8">
+                  {{form.end}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div id="btns" class="row">
+          <div class="col-md-2 col-md-offset-4">
+            <input class="btn btn-primary btn-lg btn-block" type="submit" name="" value="등록">
+          </div>
+          <div class="col-md-2">
+            <button id="register-close" class="btn btn-warning btn-lg btn-block" data-dismiss="modal">취소</button>
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+#clock {
+  font-size: 24px;
+  float: right;
+}
+
+#youtube-video {
+  width: 800px;
+  height: 400px;
+  position: relative; top: 0; left: 20%;
+}

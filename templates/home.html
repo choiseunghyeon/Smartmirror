@@ -1,0 +1,65 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery-migrate-1.4.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery-ui.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.bxslider.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.mb.YTPlayer.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/moment.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/fullcalendar.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/ko.js" %}"></script>
+
+    <script type="text/javascript" src="{% static "js/home.js" %}"></script>
+
+    <link rel="stylesheet" href="{% static "css/jquery-ui.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/jquery-ui.theme.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/jquery-ui.structure.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/jquery.mb.YTPlayer.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/fullcalendar.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/fullcalendar.print.min.css" %}" media="print">
+    <link rel="stylesheet" href="{% static "css/home.css"%}">
+    <meta charset="utf-8">
+    <title>smart mirror</title>
+  </head>
+  <body>
+<div class="container-fluid">
+    <div id="for_create">
+      
+    </div>
+    <div class="row">
+    <div id="weather" class="ui-widget-content col-md-6">
+      <img id="weather-img" src="" alt="">
+      <p id="stat"></p>
+      <p id="temperature"></p>
+    </div>
+    <div id="clock" class="ui-widget-content col-md-4 col-md-offset-2">
+      <p id="year"></p>
+      <p id="hours"></p>
+    </div>
+    </div>
+    <div class="row">
+      <div id="calendar" class="col-md-offset-6 col-md-6">
+
+      </div>
+      <button id="create" name="button">캘린더 등록</button>
+    </div>
+
+    <input id="search_keword" type="text" name="" value="">
+    <div class="row">
+    <div id="youtube-search">
+    </div>
+    </div>
+    <div class="row">
+    <div id="youtube-video">
+    </div>
+    </div>
+    </div>
+<button id="stop" name="button">멈춤</button>
+<button id="volume" name="button">볼륨</button>
+  </body>
+</html>
