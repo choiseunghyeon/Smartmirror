@@ -3,8 +3,50 @@ $(function(){
 
 
 // --------------- 유튜브
+$("#youtube-video").draggable();
+
+$("#resize_mouse").on("click",function(){
+  $("#youtube-video").empty();
+  if ($("#youtube-video").attr("class").search(/resizable/) > 0) {
+    console.log("I'm n")
+    $("#youtube-video").resizable("destroy");
+  }
+
+  $("#youtube-video").resizable();
+})
 
 
+ytwidth=800,ytheight=400
+$("#size_up_voice").on("click",function(){
+  $("#youtube-video").empty();
+  ytwidth=ytwidth+100;
+  ytheight=ytheight+100;
+  $("#youtube-video").css('width',ytwidth+'px').css('height',ytheight+'px');
+  $(".mbYTP_wrapper,.YTPOverlay, #iframe_P1").css('min-width','100%').css('min-height','100%');
+  $(".mb_YTPBar").css('min-width',$("#youtube-video").css("width"))
+})
+$("#size_down_voice").on("click",function(){
+  $("#youtube-video").empty();
+  ytwidth=ytwidth-100;
+  ytheight=ytheight-100;
+  $("#youtube-video").css('width',ytwidth+'px').css('height',ytheight+'px');
+  $(".mbYTP_wrapper,.YTPOverlay, #iframe_P1").css('min-width','100%').css('min-height','100%');
+  $(".mb_YTPBar").css('min-width',$("#youtube-video").css("width"))
+})
+music_flag="off"
+$("#only_music").on("click",function(){
+  if (music_flag == "off") {
+    $("#youtube-video").css("display","none")
+    music_flag="on";
+  } else {
+    $("#youtube-video").css("display","block")
+    music_flag="off";
+  }
+  $("#turn_off_video").on("click",function(){
+    $("youtube-video").empty();
+  })
+//  $("#controlBar_P1").css("display","block")
+})
 // 검색
 $("#search_keword").on("blur",function(){
 
@@ -27,7 +69,7 @@ $("#search_keword").on("blur",function(){
           var videoId=data.items[i].id.videoId;
           var title=data.items[i].snippet.title;
           var img_url=data.items[i].snippet.thumbnails.medium.url;
-          $("#slide-banner").append('<li><span>number '+(i+1)+'</span><figure><img src="'+img_url+'" value="'+videoId+'"><figcaption>'+title+'</figcaption></figure></li>');
+          $("#slide-banner").append('<li><span>Number '+(i+1)+'</span><figure><img src="'+img_url+'" value="'+videoId+'"><figcaption>'+title+'</figcaption></figure></li>');
         }
         var slider = $("#slide-banner").bxSlider({
           mode:"vertical",
@@ -51,7 +93,7 @@ $("#search_keword").on("blur",function(){
 $(document).on("click","#youtube-search img",function(){
   var video_id = $(this).attr("value");
   var video_div = '<div id="P1" class="player" data-property="{';
-  var div_option =["videoURL:'http://youtu.be/",video_id+"'", "," , "containment:'#youtube-video'",  ","  ,"autoPlay:true", "," ,"startAt:0", "," ,"opacity:1"]
+  var div_option =["videoURL:'http://youtu.be/",video_id+"'", "," , "containment:'#youtube-video'",  ","  ,"stopMovieOnBlur:false", "," ,"startAt:0", "," ,"opacity:1"]
   for (var i = 0; i < div_option.length; i++) {
     video_div+=div_option[i];
   }
@@ -60,11 +102,17 @@ $(document).on("click","#youtube-search img",function(){
   $("#youtube-search").empty();
   $("#youtube-video").html(video_div);
   $("#P1").YTPlayer();
-
 })
 
-$("#stop").on("click",function(){
-  $("#P1").YTPPause();
+var ss_flag="off"
+$("#stop_start").on("click",function(){
+  if (ss_flag == "off") {
+    $("#P1").YTPPause();
+    ss_flag="on";
+  } else {
+    $("#P1").YTPPlay();
+    ss_flag="off";
+  }
 })
 $("#volume").on("click",function(){
   $("#P1").YTPSetVolume(30);
@@ -73,85 +121,8 @@ $("#stop").on("click",function(){
   $(".ytp-play-button ytp-button").click();
 })
 
-//------------------------- 캘린더
-var csrftoken=$("[name=csrfmiddlewaretoken]").val();
-
-function csrfSafeMethod(method) {
-  // these HTTP methods do not require CSRF protection
-  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-$("#create").on("click",function(){
-  $.ajax({
-    url:"/mirror/create/",
-    type: "get",
-    dataType:"html",
-    success:function(data){
-      $("#for_create").html(data);
-      $('#modal_register').modal('show');
-    }
-  })
-})
-
-$(document).on("submit","#create",function(event){
-  csrftoken=$("[name=csrfmiddlewaretoken]").val();
-  event.preventDefault();
-  send_create();
-  $("#register-close").click();
-})
-
-function send_create(){
-  form_data = {
-    title:$('#create input[name="title"]').val(),
-    start:$('#create input[name="start"]').val(),
-    end:$('#create input[name="end"]').val(),
-  }
-  $.ajax({
-    url:"/mirror/create/",
-    type:"POST",
-    dataType:"json",
-    data:form_data,
-    beforeSend: function(xhr, settings){
-      if(!csrfSafeMethod(settings.type) && !this.crossDomain){
-        xhr.setRequestHeader("X-CSRFToken",csrftoken);
-      }
-    },
-    success:function(json){
-      console.log(json.result);
-      calendar_start();
-    }
-  })
-}
-function calendar_start(){
-  var t = new Date();
-  var month = t.getMonth()+1
-  var address = "/mirror/"+t.getFullYear()+"/"+month+"/";
-  $.ajax({
-    url: address,
-    type: 'get',
-    dataType:'json',
-    success: function(json){
-      console.log(json.data);
-      console.log(json.year)
-      $("#calendar").fullCalendar('removeEvents');
-      $("#calendar").fullCalendar('addEventSource',json.data);
-
-    }
-  })
-}
-calendar_start();
-$("#calendar").fullCalendar({
-  header: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'month,listMonth'
-  },
-  defaultDate: '2017-07-24',
-  lang: "ko",
-  defaultView:'month',
-  editable:true,
-})
 //----------------------시간 && 날씨 정보
+
   function real_time_clock(){
     var t=new Date();
     var ap; // AM PM
@@ -220,3 +191,85 @@ $("#calendar").fullCalendar({
   $("#clock").draggable().css("border","none");
 
 })
+
+
+//------------------------- 캘린더
+/*
+var csrftoken=$("[name=csrfmiddlewaretoken]").val();
+
+function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$("#create").on("click",function(){
+$.ajax({
+url:"/mirror/create/",
+type: "get",
+dataType:"html",
+success:function(data){
+$("#for_create").html(data);
+$('#modal_register').modal('show');
+}
+})
+})
+
+$(document).on("submit","#create",function(event){
+csrftoken=$("[name=csrfmiddlewaretoken]").val();
+event.preventDefault();
+send_create();
+$("#register-close").click();
+})
+
+function send_create(){
+form_data = {
+title:$('#create input[name="title"]').val(),
+start:$('#create input[name="start"]').val(),
+end:$('#create input[name="end"]').val(),
+}
+$.ajax({
+url:"/mirror/create/",
+type:"POST",
+dataType:"json",
+data:form_data,
+beforeSend: function(xhr, settings){
+if(!csrfSafeMethod(settings.type) && !this.crossDomain){
+xhr.setRequestHeader("X-CSRFToken",csrftoken);
+}
+},
+success:function(json){
+console.log(json.result);
+calendar_start();
+}
+})
+}
+function calendar_start(){
+var t = new Date();
+var month = t.getMonth()+1
+var address = "/mirror/"+t.getFullYear()+"/"+month+"/";
+$.ajax({
+url: address,
+type: 'get',
+dataType:'json',
+success: function(json){
+console.log(json.data);
+console.log(json.year)
+$("#calendar").fullCalendar('removeEvents');
+$("#calendar").fullCalendar('addEventSource',json.data);
+
+}
+})
+}
+calendar_start();
+$("#calendar").fullCalendar({
+header: {
+left: 'prev,next today',
+center: 'title',
+right: 'month,listMonth'
+},
+defaultDate: '2017-07-24',
+lang: "ko",
+defaultView:'month',
+editable:true,
+})
+*/
